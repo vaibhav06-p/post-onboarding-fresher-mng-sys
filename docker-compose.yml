@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: flask-web
+    ports:
+      - "5000:5000"
+    environment:
+      SQLALCHEMY_DATABASE_URI: "mysql+pymysql://root:rootpassword@db:3306/fresher_mng"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: fresher_mng
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+
+volumes:
+  mysql_data:
+

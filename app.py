@@ -1,11 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import os
 
 app = Flask(__name__)
 
 app.config['SECRET_KEY'] = 'change_this_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/freshers_mgmt'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
+    'SQLALCHEMY_DATABSE_URI',
+    'mysql+pymysql://root:rootpassword@db:3306/fresher_mng'
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
